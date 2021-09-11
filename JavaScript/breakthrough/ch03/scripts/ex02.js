@@ -82,9 +82,10 @@ window.requestAnimationFrame =
 
 /* たくさんのパーティカルを動かす */
 var canvas = document.getElementById( "canvas" );
-var ctx = canvas.getContext( "2d" ); 
+var ctx = canvas.getContext( "2d" );
 var NUM = 20;
 var particles = [];
+
 
 canvas.width = canvas.height = 500
 
@@ -112,7 +113,7 @@ Particle.prototype.draw = function() {
     ctx = this.ctx;
     ctx.beginPath();
     ctx.fillStyle = "#99ff66";
-    ctx.rect( this.x, this.y, 4, 4 );
+    ctx.rect( this.x, this.y, 4, 20 );
     ctx.fill();
     ctx.closePath();
 }
@@ -137,6 +138,3 @@ function render() {
     //5. 一定時間を置く
     requestAnimationFrame( render );
 }
-
-
-
