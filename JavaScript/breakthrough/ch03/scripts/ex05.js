@@ -9,7 +9,7 @@ window.requestAnimationFrame =
 
 var canvas = document.getElementById( "canvas" ),
   ctx = canvas.getContext("2d"),
-  NUM = 20,
+  NUM = 50,
   LIFEMAX = 100,
   particles = [],
   W = 500,
@@ -66,6 +66,7 @@ Particle.prototype.draw = function() {
 Particle.prototype.updateParams = function() {
   var ratio = this.life / this.startLife; //現在の寿命がどれくらい残っているか
   this.color.a = 1 - ratio; //ratioは1から0まで変化
+  this.radius = 30 / ratio // 寿命に応じて半径も変化させる
   this.life -= 1; //1からratioを引くことで,0から1に向かってa（透明度）が変化する
   if( this.life === 0 ) this.initialize(); //lifeが0になったら、最初期化
 }
