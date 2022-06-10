@@ -1,65 +1,68 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <strings.h>
 
-#define MAXLINE 1024
+#define MAXLINE 256
 
-// リスト構造のための構造体の定義
-
-struct list {
-  struct list *next;
-  char *name;
+// 答えを入れる構造体の定義
+struct kotae {
+  unsigned int tsuru;
+  unsigned int kame;
 };
 
-int main(){
-  //
-  // pは、常にリスト構造の先頭を示し、最初にmallocの戻り値を代入された後は、変更されない
-  // q,rは、リスト構造の連結に使われるため、書き換わる
-  struct list *p, *q, *r;
+// 答えを求める関数の定義
+int solve(unsigned int atama, unsigned int ashi, struct kotae *p) {
 
-  char input[MAXLINE];
-  char *s, *t;
-
-  // リストの先頭を最初NULLポインタにしておく
-  p = NULL;
-  // 順番に動かすポインタqをNULLにしておく
-  q = NULL;
-  // fgetsでcontrol-Dが入力されるまで繰り返し
-  for(;;){
-    t = fgets(input,MAXLINE,stdin);
-    // control-Dが入力されたら break で繰り返しを抜け出す
-    if(t == NULL){
-      break;
-    }
-    // 行末の改行文字を終端文字に置き換える
-    s = strchr(input,'\n');
-    if(s!=NULL){
-      *s = '\0';
-    }
-    // list 構造体の記憶場所を確保
-    // 以下、malloc()がNULLを返したときのエラー処理は省略
-    r = malloc(sizeof(struct list));
-    // 入力された文字列を入れる記憶場所を確保し複製する
-    r->name = malloc(sizeof(char)*(strlen(input)+1));
-    strcpy(r->name,input);
-    r->next = NULL;
-    // qがNULLでなければ、つまり2回目以降の繰り返しだったら
-    // 現在のqの次に、新たに確保したrを付け足す
-    // qがNULLならば、1回目の繰り返しなので、rをそのままqにして
-    // それをpにも入れる
-    // qは繰り返しのたびに変化するので、最初がどこかを覚えておかないと
-    // 後でたどれなくなる
-    if(q != NULL){
-      q->next = r;
-      q = r;
-    }else{
-      q = r;
-      p = q;
-    }
+  // 頭と足の組み合わせががおかしい場合を調べて0を返す
+  if(atama * 4 < ashi || ashi < atama * 2 || ashi % 2 != 0) {
+    return 0;
   }
-  // 入力された文字列の表示
- for(q = p; q != NULL; q = q->next){
-    printf("%s\n",q->name);
-  }
+  // 答えば求まる場合にその答えを計算して, 構造体に入れて 1 を返す
+  p->kame = (ashi - atama*2)/2;
+  p->tsuru = atama - p->kame;
+  return 1;
 }
+
+int main() {
+  int ret;
+  char input[MAXLINE];
+  int atama, ashi;
+  struct kotae tk;
+
+  // メッセージを表示して1行入力する
+  // fgets()の返す値を無視するのでvoid型に明示的にキャストする
+  (void)fgets(input, MAXLINE, stdin);
+
+  // sscanf()で,区切りの整数値を入力
+  // 負の値が入力された場合などは調べていない
+  ret = sscanf(input, "%d,%d", &atama, &ashi);
+  if (ret =! 2) {
+    printf("入力が正しくありません\n");
+    return -1;
+  } 
+
+  printf("頭%u, 足%u\n", atama, ashi);
+  // retに代入せずif()の中に直接solve()を書く方法もある
+  if(ret == 0) {
+    printf("答えは計算できません.\n");
+  } else {
+    printf("つる%u匹,かめ%u匹です.\n", tk.tsuru, tk.kame);
+  }
+  return 0;
+
+}
+
+/* 問題
+次のような仕様で、つるかめ算の答えを求めるプログラムを作成してください。
+
+main()とsolve()の2つの関数だけを定義する
+solve()は、次のようなプロトタイプ宣言にしたがうものとする
+int solve(unsigned int atama, unsigned int ashi, struct kotae *p);
+int solve()は、次のようなstruct kotae型の構造体につるかめ算の答えを入れる。
+また、答えが見つかった場合には1を返し、見つからなかった場合には、0を返す。main()の中ではこの戻値を判定して、適切な表示を行う
+struct kotae {
+  unsigned int tsuru;
+  unsigned int kame;
+};
+最初の頭と足の数の入力は、標準入力から、10,24 のように1行で入力し、
+fgetsで読み込んだ後、sscanf()で解析する
+*/
