@@ -1,3 +1,20 @@
+/*------------------------------------------------------- 
+問題
+次のような仕様で、つるかめ算の答えを求めるプログラムを作成してください。
+
+main()とsolve()の2つの関数だけを定義する
+solve()は、次のようなプロトタイプ宣言にしたがうものとする
+int solve(unsigned int atama, unsigned int ashi, struct kotae *p);
+int solve()は、次のようなstruct kotae型の構造体につるかめ算の答えを入れる。
+また、答えが見つかった場合には1を返し、見つからなかった場合には、0を返す。main()の中ではこの戻値を判定して、適切な表示を行う
+struct kotae {
+  unsigned int tsuru;
+  unsigned int kame;
+};
+最初の頭と足の数の入力は、標準入力から、10,24 のように1行で入力し、
+fgetsで読み込んだ後、sscanf()で解析する
+------------------------------------------------------------*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #define MAXLINE 265
