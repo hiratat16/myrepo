@@ -18,9 +18,16 @@ int main(int argc, char *argv[]){
     }
     
     // ファイルをopen()関数の読み書き両用でオープンする
-    if ((fd = open(argv[1], O_RDONLY)) == -1) {
-        perror("open(): "); // ファイルのopenに失敗した場合
-        exit(EXIT_FAILURE);
+    fd = open(argv[1], O_RDONLY)
+    if (fd == -1) {
+        if(errno == ENOENT){
+            fprintf(stderr,"No such file.\n");
+        }else if(errno == EACCES){
+            fprintf(stderr,"Access Error.\n");
+        }else{
+        fprintf(stderr,"Error No = %u.\n", errno);
+        }
+        return 1;
     } 
 
     else {
@@ -50,3 +57,11 @@ int main(int argc, char *argv[]){
     return 0;
         
 }
+
+// for(;;){
+//     cc = read(fd, data, DATASIZE);
+//     if (cc == 0){
+//       break;
+//     }
+//     write(1, data, cc);
+// }
